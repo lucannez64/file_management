@@ -1,0 +1,17 @@
+[package]
+name = "file_management"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[[bin]]
+name = "file_management"
+path = "src/main.rs"
+[[bin]]
+name = "install_service"
+path = "src/install_service.rs"
+[dependencies]
+notify = "4.0.17"
+windows-service = "0.4.0"
