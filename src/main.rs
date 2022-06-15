@@ -24,13 +24,8 @@ fn main() {
 
 #[cfg(windows)]
 mod file_management {
-    use notify::{Watcher, RecursiveMode, watcher};
-    use std::{
-        ffi::OsString,
-        sync::mpsc,
-        time::Duration,
-        fs,
-    };
+    use notify::{watcher, RecursiveMode, Watcher};
+    use std::{ffi::OsString, fs, sync::mpsc, time::Duration};
     use windows_service::{
         define_windows_service,
         service::{
@@ -107,75 +102,147 @@ mod file_management {
         // Create a watcher object, delivering debounced events.
         // The notification back-end is selected based on the platform.
         let mut watcher = watcher(tx, Duration::from_secs(2)).unwrap();
-        
+
         // Add a path to be watched. All files and directories at that path and
         // below will be monitored for changes.
-        watcher.watch("C:/Downloads", RecursiveMode::Recursive).unwrap();
-        
+        watcher
+            .watch("C:/Downloads", RecursiveMode::Recursive)
+            .unwrap();
 
         loop {
             match rx.recv() {
-                Ok(event) =>{ 
-                    match event {
-                        notify::DebouncedEvent::Create(patha) => {
-                            match patha.extension() {
-                                Some(ext) => {
-                                    match ext.to_str().unwrap() {
-                                        "PDF" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Documents/PDF/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "pdf" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Documents/PDF/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "rar" => {
-                                            fs::rename(&patha, "C:/ZIP/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "zip" => {
-                                            fs::rename(&patha, "C:/ZIP/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "msi" => {
-                                            fs::rename(&patha, "C:/installation/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "exe" => {
-                                            fs::rename(&patha, "C:/installation/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "ai" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/SVG/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "svg" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/SVG/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "aseprite" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/SVG/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "gif" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/SVG/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "PNG" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "png" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "jpg" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "jpeg" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        "webp" => {
-                                            fs::rename(&patha, "C:/Users/mazav/OneDrive/Images/".to_owned()+patha.file_name().unwrap().to_str().unwrap()).unwrap();
-                                        },
-                                        _ => {
-                                            println!("{:?}", patha);
-                                        }
-                                    }
-                                },
-                                None => {},
-                            };
-                        },
-                        _ => {}
+                Ok(event) => match event {
+                    notify::DebouncedEvent::Create(patha) => {
+                        match patha.extension() {
+                            Some(ext) => match ext.to_str().unwrap() {
+                                "PDF" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Documents/PDF/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "pdf" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Documents/PDF/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "rar" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/ZIP/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "zip" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/ZIP/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "msi" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/installation/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "exe" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/installation/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "ai" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/SVG/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "svg" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/SVG/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "aseprite" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/SVG/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "gif" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/SVG/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "PNG" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "png" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "jpg" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "jpeg" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                "webp" => {
+                                    fs::rename(
+                                        &patha,
+                                        "C:/Users/mazav/OneDrive/Images/".to_owned()
+                                            + patha.file_name().unwrap().to_str().unwrap(),
+                                    )
+                                    .unwrap();
+                                }
+                                _ => {
+                                    println!("{:?}", patha);
+                                }
+                            },
+                            None => {}
+                        };
                     }
+                    _ => {}
                 },
                 Err(e) => println!("watch error: {:?}", e),
             }
